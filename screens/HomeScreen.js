@@ -15,8 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = ({ navigation }) => {
   const [topMovies, setTopMovies] = useState([]);
-  const [favoriteMovies, setFavoriteMovies] = useState([]);
-
+ 
   // Fetch top movies
   useEffect(() => {
     const fetchTopMovies = async () => {
@@ -41,25 +40,7 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   // Fetch favorite movies
-  useEffect(() => {
-    const loadFavorites = async () => {
-      try {
-        const favoritesJson = await AsyncStorage.getItem('favoriteMovies');
-        if (favoritesJson) {
-          setFavoriteMovies(JSON.parse(favoritesJson));
-        }
-      } catch (error) {
-        console.error('Error loading favorites:', error);
-      }
-    };
-
-    // Load favorites when screen mounts and when navigating back
-    const unsubscribe = navigation.addListener('focus', loadFavorites);
-    loadFavorites();
-
-    return unsubscribe;
-  }, [navigation]);
-
+  
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -120,24 +101,7 @@ const HomeScreen = ({ navigation }) => {
         </View>
 
         {/* My Favorites Section */}
-        {favoriteMovies.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>My Favorites</Text>
-            <FlatList
-              horizontal
-              data={favoriteMovies}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => navigation.navigate('MovieDetail', { movieId: item.id })}>
-                  <Image 
-                    source={{ uri: item.image }} 
-                    style={styles.movieImage} 
-                  />
-                </TouchableOpacity>
-              )}
-            />
-          </View>
-        )}
+       
       </ScrollView>
     </View>
   );
